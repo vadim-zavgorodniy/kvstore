@@ -17,7 +17,6 @@ local function bootstrap()
     });
 
     box.space.kv:create_index('pk', {type = 'hash', parts = {'key'}});
-    -- TODO: наверное это стоит потом удалить...
     box.schema.user.grant('guest', 'read,write,execute', 'universe');
 end
 

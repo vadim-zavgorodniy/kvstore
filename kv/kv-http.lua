@@ -1,15 +1,9 @@
-box.cfg{
-    --   listen = 'localhost:3301';
-    -- background = true,
-    -- log = '1.log',
-    -- pid_file = '1.pid'
-}
-
+--==========================================================
+-- http интерфейс к key/value хранилищу kv-store
 --==========================================================
 
 local json = require('json')
-local kvstore = require('kv-store')
--- local kvstore = dofile('kv-store.lua')
+local kvstore = require('kv.kv-store')
 
 local function make_json_response(code, response)
     response.status = code
@@ -89,16 +83,31 @@ local function delete(req)
     return make_json_response(200, response)
 end
 
+--==========================================================
+local kvhttp = {}
 
-local kv_host = 'localhost';
-local kv_port = '8080';
+local httpd = null
+local is_initialized = false
 
-httpd = require('http.server').new(kv_host, kv_port)
-httpd:route({path = '/kv', method = 'POST'}, create)
-httpd:route({path = '/kv/:key', method = 'GET'}, read)
-httpd:route({path = '/kv/:key', method = 'PUT'}, update)
-httpd:route({path = '/kv/:key', method = 'DELETE'}, delete)
+local function init_server(host, port)
+    if not is_initialized then
+        httpd = require('http.server').new(host, port)
+        httpd:route({path = '/kv', method = 'POST'}, create)
+        httpd:route({path = '/kv/:key', method = 'GET'}, read)
+        httpd:route({path = '/kv/:key', method = 'PUT'}, update)
+        httpd:route({path = '/kv/:key', method = 'DELETE'}, delete)
+        is_initialized = true
+    end
+end
 
-httpd:start()
+function kvhttp.start(host, port)
+    init_server(host, port)
+    httpd:start()
+end
 
+function kvhttp.stop()
+    httpd:stop()
+end
+
+return kvhttp
 --==========================================================
