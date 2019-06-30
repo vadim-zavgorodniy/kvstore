@@ -1,4 +1,4 @@
-# kv-strore
+# kv-store
 
 ## Описание
 
