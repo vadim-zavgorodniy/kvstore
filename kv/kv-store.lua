@@ -35,7 +35,7 @@ end
 
 -- находит кортеж по первичному ключу
 -- возвращает кортеж, вторым параметром явный признак был ли кортеж найден
-local function select(key)
+local function select_data(key)
     local records = box.space.kv:select{key}
     local is_found = #records ~= 0
     if is_found then
@@ -78,7 +78,7 @@ local function delete(key)
 end
 
 local kvstore = {
-    select = select,
+    select = select_data,
     insert = insert,
     update = update,
     delete = delete
