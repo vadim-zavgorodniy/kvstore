@@ -37,7 +37,7 @@ local function create(req)
         return make_json_response(400, response)
     end
 
-    if body.key == nill or body.value == nill then
+    if body.key == nil or body.value == nil then
         return make_json_response(400, response)
     end
     if type(body.key) ~= 'string' then
@@ -59,7 +59,7 @@ local function update(req)
     if not valid_json or type(body) ~= 'table' then
         return make_json_response(400, response)
     end
-    if body.value == nill then
+    if body.value == nil then
         return make_json_response(400, response)
     end
 
