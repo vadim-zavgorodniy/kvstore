@@ -5,4 +5,4 @@ box.cfg{
 }
 
 local kvstore = require('kv.kv-http')
-kvstore.start('localhost', '8080')
+kvstore.start('0.0.0.0', '8080')
