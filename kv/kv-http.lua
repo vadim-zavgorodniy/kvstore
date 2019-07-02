@@ -84,8 +84,6 @@ local function delete(req)
 end
 
 --==========================================================
-local kvhttp = {}
-
 local httpd = null
 local is_initialized = false
 
@@ -100,14 +98,19 @@ local function init_server(host, port)
     end
 end
 
-function kvhttp.start(host, port)
+local function start(host, port)
     init_server(host, port)
     httpd:start()
 end
 
-function kvhttp.stop()
+local function stop()
     httpd:stop()
 end
+
+local kvhttp = {
+    start = start,
+    stop = stop
+}
 
 return kvhttp
 --==========================================================

@@ -1,5 +1,3 @@
-local kvstore = {}
-
 local logger = require('log')
 
 -- инициализирует спейс хранилища
@@ -37,7 +35,7 @@ end
 
 -- находит кортеж по первичному ключу
 -- возвращает кортеж, вторым параметром явный признак был ли кортеж найден
-function kvstore.select(key)
+local function select(key)
     local records = box.space.kv:select{key}
     local is_found = #records ~= 0
     if is_found then
@@ -48,7 +46,7 @@ end
 
 -- добавляет кортеж по ключу
 -- возвращает true - если запись была добавлена, false - если ключ уже занят.
-function kvstore.insert(key, value)
+local function insert(key, value)
     local can_insert = key_free(key)
     if can_insert then
         box.space.kv:insert{key, value}
@@ -59,7 +57,7 @@ end
 
 -- обновляет кортеж по ключу
 -- возвращает true - если запись была обновлена, false - если ключ не был найден.
-function kvstore.update(key, value)
+local function update(key, value)
     local key_exists = (key_free(key) == false)
     if key_exists then
         box.space.kv:update({key}, {{'=', 2, value}})
@@ -70,7 +68,7 @@ end
 
 -- удаляет кортеж по ключу
 -- возвращает true - если запись была удалена, false - если ключ не был найден.
-function kvstore.delete(key)
+local function delete(key)
     local key_exists = (key_free(key) == false)
     if key_exists then
         box.space.kv:delete{key}
@@ -78,5 +76,12 @@ function kvstore.delete(key)
     end
     return key_exists
 end
+
+local kvstore = {
+    select = select,
+    insert = insert,
+    update = update,
+    delete = delete
+}
 
 return kvstore
